@@ -1,0 +1,52 @@
+\documentclass{beamer}
+
+\begin{document}
+
+\title{Comparison Bar plots}
+\author{Heidi Beezub}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+    \tableofcontents
+\end{frame}
+
+
+\section{Install and Load Libraries}
+\begin{frame}[fragile]
+  \frametitle{Install and Load Libraries}
+  \begin{itemize}
+  \item<1->
+    <<warning=FALSE,message=FALSE>>=
+      library(gutenbergr)
+    @
+  \item<2->
+    <<warning=FALSE,message=FALSE>>=
+      library(dplyr)
+    @
+  \item<3->
+    <<warning=FALSE,message=FALSE>>=
+      library(tidytext)
+    @
+  \item<4->
+    <<warning=FALSE,message=FALSE>>=
+      library(ggplot)
+    @
+
+
+
+    \end{itemize}
+\end{frame}
+
+\section{access project Gutenberg}
+\begin{frame}[fragile]
+  \frametitle{access project Gutenberg}
+
+\end{frame}
+
+
+
+\end{document}

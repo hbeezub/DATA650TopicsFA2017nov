@@ -1,0 +1,8 @@
+\beamer@sectionintoc {1}{Install and Load Libraries}{3}{0}{1}
+\beamer@sectionintoc {2}{Access Project Gutenberg}{8}{0}{2}
+\beamer@sectionintoc {3}{Download Dracula}{9}{0}{3}
+\beamer@sectionintoc {4}{Unpack the Words}{10}{0}{4}
+\beamer@sectionintoc {5}{The Bing Lexicon}{11}{0}{5}
+\beamer@sectionintoc {6}{The Inner Join}{12}{0}{6}
+\beamer@sectionintoc {7}{Top Ten Positive Words}{13}{0}{7}
+\beamer@sectionintoc {8}{Top Ten Negative Words}{15}{0}{8}

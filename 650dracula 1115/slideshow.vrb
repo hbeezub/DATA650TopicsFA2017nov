@@ -1,0 +1,29 @@
+\frametitle{The Comparison Barplot}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{dracula_pos}\hlopt{$}\hlstd{word}\hlkwb{<-}\hlkwd{factor}\hlstd{(dracula_pos}\hlopt{$}\hlstd{word,}
+                         \hlkwc{levels}\hlstd{=dracula_pos}\hlopt{$}\hlstd{word)}
+\hlstd{dracula_neg}\hlopt{$}\hlstd{word}\hlkwb{<-}\hlkwd{factor}\hlstd{(dracula_neg}\hlopt{$}\hlstd{word,}
+                         \hlkwc{levels}\hlstd{=dracula_neg}\hlopt{$}\hlstd{word)}
+
+\hlstd{dracula_comp}\hlkwb{<-}\hlkwd{rbind}\hlstd{(dracula_pos,dracula_neg)}
+
+\hlstd{plot}\hlkwb{<-}\hlkwd{ggplot}\hlstd{()}\hlopt{+}
+\hlkwd{geom_bar}\hlstd{(}\hlkwc{data}\hlstd{=dracula_comp,}\hlkwd{aes}\hlstd{(}\hlkwc{x}\hlstd{=word,}\hlkwc{y}\hlstd{=count,}
+\hlkwc{fill}\hlstd{=sentiment,} \hlkwc{color}\hlstd{=sentiment),}\hlkwc{stat}\hlstd{=}\hlstr{'identity'}\hlstd{)}\hlopt{+}
+\hlkwd{coord_flip}\hlstd{()}\hlopt{+}
+\hlkwd{facet_wrap}\hlstd{(}\hlopt{~}\hlstd{sentiment,}\hlkwc{scales}\hlstd{=}\hlstr{'free_y'}\hlstd{)}\hlopt{+}
+\hlkwd{scale_fill_manual}\hlstd{(}\hlkwc{values}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'black'}\hlstd{,}\hlstr{'#ea6205'}\hlstd{))}\hlopt{+}
+\hlkwd{scale_color_manual}\hlstd{(}\hlkwc{values}\hlstd{=}\hlkwd{c}\hlstd{(}\hlstr{'#ea6205'}\hlstd{,}\hlstr{'black'}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\framebreak
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-15-1}
+
+\end{knitrout}
+

@@ -1,0 +1,17 @@
+\documentclass{book}
+
+\begin{document}
+\title{stress management}
+\author{Judy M \and Will B
+\and andrew Mayo}
+\date{} %% so no date shows
+\maketitle
+
+<<child='children/chapter1.Rnw'>>=
+
+@
+
+
+
+
+\end{document}

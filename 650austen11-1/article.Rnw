@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage{natbib}
+
+<<echo=FALSE>>=
+packages<-c('dplyr','stringr','tidytext','wordcloud','tm','janeaustenr')
+knitr::write_bib(packages,file='packages.bib')
+@
+
+
+\begin{document}
+
+
+
+\title{Sense and Sensibility Wordcloud}
+\author{Charles Redmond}
+\maketitle
+
+\begin{abstract}
+In this article we construct a wordcloud, using the tidytext R package, for Jane Austen's Sense and Sensibility.
+
+\end{abstract}
+
+\textit{Sense and Sensibility} is a novel by Jane Austen, published in 1811\footnote{The novel was published anonymously.}. Below we construct a wordcloud for the most common words appearing in the novel.
+
+\section{The Jane Austen Package}
+There is a relatively new package for R, janeaustenr, that gives one access to all of the novels written by Jane Austen \citep{Silge}.  One first has to install this package and bring it in with library.  You may then call the following function and store the result.  The result will be a data frame.
+
+<<>>=
+library(janeaustenr)
+sns<-austen_books()
+@
+
+This dataframe has two columns, one for each line in Austen's novels, and one indicating which book the line is from.  Let's first filter, using dplyr, so that we have only the lines from Sense and Sensibilty:
+
+<<warning=FALSE,message=FALSE>>=
+library(dplyr)
+sns<-sns%>%
+  filter(book == 'Sense & Sensibility')
+head(sns)
+@
+
+\noindent Now we are ready for some data cleaning.
+
+\section{Some Data Cleaning}
+
+We would like to remove all of the `Chapter' lines.  We can use dplyr again, along with the package stringr.
+
+<<>>=
+library(stringr)
+sns<-sns%>%
+  filter(!str_detect(sns$text,'^CHAPTER'))
+
+@
+
+Next, we would like to remove the front matter.  By inspection, we have determined that the front matter ends on line 11.  Therefore we can redefine sns to begin on line 12:
+
+<<>>=
+sns<-sns[12:12574,]
+@
+
+\section{The Wordcloud}
+To make the wordcloud, we first have to break up the lines into words.  We can use a function from the tidytext package for this:
+
+<<>>=
+library(tidytext)
+words_df<-sns%>%
+  unnest_tokens(word,text)
+
+words_df
+@
+
+We can remove common, unimportant words with the stop\_words data frame and some dplyr:
+
+<<>>=
+words_df<-words_df%>%
+  filter(!(word %in% stop_words$word))
+
+words_df
+@
+
+Now, we need to calculate the frequencies of the words in the novel.  Again, we can use standard dplyr techniques for this:
+
+<<>>=
+word_freq<-words_df%>%
+  group_by(word)%>%
+  summarize(count=n())
+
+word_freq
+@
+
+Finally, it's time to generate the wordcloud:
+
+<<message=FALSE,warning=FALSE>>=
+library(wordcloud)
+library(tm)
+wordcloud(word_freq$word,word_freq$count,min.freq=25)
+@
+
+\bibliographystyle{apa}
+\bibliography{article,packages}
+\nocite{*}
+
+\end{document}

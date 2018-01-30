@@ -1,0 +1,19 @@
+\documentclass{beamer}
+
+\begin{document}
+
+\title{Comparison Bar plots}
+\author{Heidi Beezub}
+
+\begin{frame}
+  \titlepage
+\end{fame}
+
+
+
+
+
+
+
+
+\end{document}

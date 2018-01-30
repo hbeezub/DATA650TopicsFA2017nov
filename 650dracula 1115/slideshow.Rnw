@@ -1,0 +1,159 @@
+\documentclass{beamer}
+\usetheme{bergen}
+\usecolortheme{albatross}
+\begin{document}
+
+\title{Positive and Negative Words in Dracula}
+\author{Charles Redmond}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outline}
+    \tableofcontents
+\end{frame}
+
+\section{Install and Load Libraries}
+\begin{frame}[fragile]
+  \frametitle{Install and Load Libraries}
+  \begin{itemize}
+  \item<1->
+    <<warning=FALSE,message=FALSE>>=
+      library(gutenbergr)
+    @
+  \item<2->
+    <<warning=FALSE,message=FALSE>>=
+      library(dplyr)
+    @
+  \item<3->
+    <<warning=FALSE,message=FALSE>>=
+      library(tidytext)
+    @
+  \item<4->
+    <<warning=FALSE,message=FALSE>>=
+      library(stringr)
+    @
+  \item<5->
+    <<warning=FALSE,message=FALSE>>=
+      library(ggplot2)
+    @
+  
+  
+  \end{itemize}
+\end{frame}
+
+\section{Access Project Gutenberg}
+\begin{frame}[fragile]
+  \frametitle{Access Project Gutenberg}
+    <<>>=
+    df<-gutenberg_works(str_detect(title,'Dracula'))
+    df$gutenberg_id
+    df$title
+    @
+\end{frame}
+
+\section{Download Dracula}
+\begin{frame}[fragile]
+  \frametitle{Download Dracula}
+    <<message=FALSE>>=
+    dracula<-gutenberg_download(345)
+    colnames(dracula)
+    substr(dracula$text[500],1,21)
+    @
+\end{frame}
+
+\section{Unpack the Words}
+\begin{frame}[fragile]
+  \frametitle{Unpack the Words}
+    <<>>=
+    dracula_words<-dracula%>%
+                  unnest_tokens(word,text)
+    colnames(dracula_words)
+    dracula_words[500,]
+    @
+\end{frame}
+
+\section{The Bing Lexicon}
+\begin{frame}[fragile]
+  \frametitle{The Bing Lexicon}
+    <<>>=
+    bing<-get_sentiments('bing')
+    colnames(bing)
+    bing[500,]
+    @
+\end{frame}
+
+\section{The Inner Join}
+\begin{frame}[fragile]
+  \frametitle{The Inner Join}
+  <<>>=
+  dracula_words<-inner_join(dracula_words,bing)
+  dracula_words$gutenberg_id<-NULL
+  colnames(dracula_words)
+  @
+\end{frame}
+
+\section{Top Ten Positive Words}
+\begin{frame}[allowframebreaks,fragile]
+  \frametitle{Top Ten Positive Words}
+    <<>>=
+      dracula_pos<-dracula_words%>%
+      filter(sentiment=='positive')%>%
+      group_by(word)%>%
+      summarize(count=n(),sentiment=first(sentiment))%>%
+      arrange(count)%>%
+      top_n(10,wt=count)
+      @
+\framebreak
+  <<>>=
+    dracula_pos
+  @
+
+\end{frame}
+
+\section{Top Ten Negative Words}
+\begin{frame}[fragile]
+  \frametitle{Top Ten Negative Words}
+    <<echo=FALSE>>=
+    dracula_neg<-dracula_words%>%
+    filter(sentiment=='negative')%>%
+    group_by(word)%>%
+    summarize(count=n(),sentiment=first(sentiment))%>%
+    arrange(count)%>%
+    filter(word != 'miss')%>%
+    top_n(10,wt=count)
+  
+    dracula_neg
+    @
+\end{frame}
+
+\begin{frame}[allowframebreaks,fragile]
+  \frametitle{The Comparison Barplot}
+  <<>>=
+  
+  dracula_pos$word<-factor(dracula_pos$word,
+                           levels=dracula_pos$word)
+  dracula_neg$word<-factor(dracula_neg$word,
+                           levels=dracula_neg$word)
+  
+  dracula_comp<-rbind(dracula_pos,dracula_neg)
+
+plot<-ggplot()+
+  geom_bar(data=dracula_comp,aes(x=word,y=count,
+  fill=sentiment, color=sentiment),stat='identity')+
+  coord_flip()+
+  facet_wrap(~sentiment,scales='free_y')+
+  scale_fill_manual(values=c('black','#ea6205'))+
+  scale_color_manual(values=c('#ea6205','black'))
+  @
+
+\framebreak
+<<echo=FALSE,fig.height=4>>=
+plot
+@
+
+\end{frame}
+
+\end{document}
